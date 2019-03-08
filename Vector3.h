@@ -42,6 +42,7 @@ public:
 	Vector3<Type> Normal() const;
 	Vector3<Type> Cross(const Vector3&) const;
 	Type Dot(const Vector3&) const;
+	Type AbsDot(const Vector3&) const;
 
 	template<class T>
 	friend std::ostream & operator<< (std::ostream & _os,const Vector3<T>& _m);
@@ -131,6 +132,12 @@ template<class Type>
 inline Type Vector3<Type>::Dot(const Vector3 & _oth) const
 {
 	return x * _oth.x + y * _oth.y + z * _oth.z;
+}
+
+template<class Type>
+inline Type Vector3<Type>::AbsDot(const Vector3 &_oth) const
+{
+	return abs(this->Dot(_oth));
 }
 
 typedef My::Vector3<float> vector3f;
