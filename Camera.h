@@ -8,13 +8,13 @@ namespace My {
 	class Camera
 	{
 	public:
-		Camera(vector3f const& pos, vector3f const& forward, vector3f const &hor,float horsize,float versize,int hres,int vres) : m_poistion(pos),m_forward(forward),m_hor_res(hres),m_ver_res(vres)
+		Camera(vector3f const& pos, vector3f const& forward, vector3f const &hor,float horsize,float versize,int hres,int vres ,float dis) : m_poistion(pos),m_forward(forward),m_hor_res(hres),m_ver_res(vres),m_max_dis(dis)
 		{
 			m_horizontal = (hor-(forward.Normal()*hor)*forward.Normal()).Normal() * horsize;
 			m_vertical = (m_forward % m_horizontal).Normal() * versize;
 			//std::cout << m_forward << m_horizontal << m_vertical;
 		}
-		Camera(vector3f const& pos, vector3f const& lookat, float len, vector3f const &hor, float horsize, float versize, int hres, int vres) : Camera(pos, pos.LookAt(lookat).Normal()*len, hor, horsize, versize, hres, vres) {};
+		Camera(vector3f const& pos, vector3f const& lookat, float len, vector3f const &hor, float horsize, float versize, int hres, int vres,float dis) : Camera(pos, pos.LookAt(lookat).Normal()*len, hor, horsize, versize, hres, vres,dis) {};
 		~Camera();
 
 		void TakePhoto(std::vector<Mesh> const& all_mesh) {
@@ -27,21 +27,28 @@ namespace My {
 				for (int j=0-m_ver_res/2 ; j < m_ver_res -m_ver_res/2; j++) {
 					Ray ray{ m_poistion,(m_poistion + m_forward + m_horizontal * (i*2.0f / m_hor_res) + m_vertical * (j*2.0f / m_ver_res)) };
 					
-					bool flag = false;
-					for (auto x : all_mesh) {
-						if (x.RayCasting(ray)) {
+					Mesh const*NearMesh = nullptr;
+					float dis = m_max_dis;
+					for (auto &x : all_mesh) {
+						auto tmp = x.RayCasting(ray);
+
+						if (tmp>0 && tmp < dis) {
+							//cout << tmp << " " << int (x.m_color.R) << " ";
 							//std::cout << "¡ð";
-							*p++ = 0;
-							*p++ = 0;
-							*p++ = 255;
-							flag = true;
-							break;
+							dis = tmp;
+							NearMesh = &x;
 						}
 					}
-					if (!flag) {
-						*p++ = 255;
-						*p++ = 255;
-						*p++ = 255;
+					if (!NearMesh) {
+						*p++ = 200;
+						*p++ = 200;
+						*p++ = 200;
+					}
+					else {
+						//cout << int( NearMesh->m_color.R )<< endl;
+						*p++ = NearMesh->m_color.R;
+						*p++ = NearMesh->m_color.G;
+						*p++ = NearMesh->m_color.B;
 					}
 
 					//if (!flag) std::cout << "  ";
@@ -60,6 +67,7 @@ namespace My {
 		vector3f m_forward;
 		vector3f m_horizontal;
 		vector3f m_vertical;
+		float m_max_dis;
 		int m_hor_res;
 		int m_ver_res;
 	};

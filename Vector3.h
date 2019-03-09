@@ -35,7 +35,7 @@ public:
 	/*
 	Define '*' to Dot product
 	*/
-	Type operator*(const Vector3 &);
+	Type operator*(const Vector3 &) const;
 	Vector3<Type> operator*(const Type&) const;
 	Vector3<Type> & operator*=(const Type&);
 
@@ -51,6 +51,7 @@ public:
 	friend std::ostream & operator<< (std::ostream & _os,const Vector3<T>& _m);
 	template<class T>
 	friend Vector3<T> operator*(T const & _num,Vector3<T> const& _this);
+	static Type Distance(Vector3<Type> _st, Vector3<Type> _ed);
 };
 
 
@@ -108,7 +109,7 @@ inline Vector3<Type> & Vector3<Type>::operator%=(const Vector3 &_oth) const
 }
 
 template<class Type>
-inline Type Vector3<Type>::operator*(const Vector3 & _oth)
+inline Type Vector3<Type>::operator*(const Vector3 & _oth) const
 {
 	return this->Dot(_oth);
 }
@@ -166,6 +167,12 @@ template<class Type>
 inline Type Vector3<Type>::AbsDot(const Vector3 &_oth) const
 {
 	return abs(this->Dot(_oth));
+}
+
+template<class Type>
+inline Type Vector3<Type>::Distance(Vector3<Type> _st, Vector3<Type> _ed) 
+{
+	return (_ed-_st).Length();
 }
 
 typedef My::Vector3<float> vector3f;

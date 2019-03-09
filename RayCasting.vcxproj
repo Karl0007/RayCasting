@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Vector3.h" />
