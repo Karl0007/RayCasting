@@ -31,7 +31,7 @@ namespace My {
 		TestNor[0] = TestRay[0] % TestRay[1];
 		TestNor[1] = TestRay[1] % TestRay[2];
 		TestNor[2] = TestRay[2] % TestRay[0];
-		std::cout << TestNor[0] * _ray.ToVec() <<" "<< TestNor[1] * _ray.ToVec() << " "<< TestNor[2] * _ray.ToVec() << std::endl;
+		//std::cout << TestNor[0] * _ray.ToVec() <<" "<< TestNor[1] * _ray.ToVec() << " "<< TestNor[2] * _ray.ToVec() << std::endl;
 		if (TestNor[0] * _ray.ToVec() <= 0 && TestNor[1] * _ray.ToVec() <= 0 && TestNor[2] * _ray.ToVec() <= 0
 			|| TestNor[0] * _ray.ToVec() > 0 && TestNor[1] * _ray.ToVec() > 0 && TestNor[2] * _ray.ToVec() > 0) {
 			return true;

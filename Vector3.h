@@ -17,7 +17,7 @@ public:
 
 	Vector3(const Type&_sx,const Type&_sy,const Type&_sz,const Type&_ex,const Type&_ey,const Type&_ez) :x(_ex - _sx), y(_ey - _sy), z(_ez - _sz) {};
 	Vector3(const Vector3&_st,const Vector3&_ed) {*this = _ed - _st;}
-	Vector3(const Type&_x = 0,const Type&_y = 0,const Type&_z = 0) : x(_x), y(_y), z(_z) {};
+	explicit Vector3(const Type&_x = 0,const Type&_y = 0,const Type&_z = 0) : x(_x), y(_y), z(_z) {};
 	~Vector3() {};
 
 	Vector3<Type> operator+ (const Vector3&) const;
@@ -36,17 +36,21 @@ public:
 	Define '*' to Dot product
 	*/
 	Type operator*(const Vector3 &);
+	Vector3<Type> operator*(const Type&) const;
+	Vector3<Type> & operator*=(const Type&);
 
 	Type Length() const;
 	Vector3<Type> Normalize();
 	Vector3<Type> Normal() const;
 	Vector3<Type> Cross(const Vector3&) const;
+	Vector3<Type> LookAt(const Vector3&) const;
 	Type Dot(const Vector3&) const;
 	Type AbsDot(const Vector3&) const;
 
 	template<class T>
 	friend std::ostream & operator<< (std::ostream & _os,const Vector3<T>& _m);
-
+	template<class T>
+	friend Vector3<T> operator*(T const & _num,Vector3<T> const& _this);
 };
 
 
@@ -59,6 +63,12 @@ std::ostream & operator<<(std::ostream & _os,const Vector3<T> & _m)
 
 }
 
+template<class T>
+Vector3<T> operator*(T const & _num, Vector3<T> const & _this)
+{
+	return Vector3<T>(_num*_this.x,_num*_this.y,_num*_this.z);
+}
+
 
 template<class Type>
 inline Vector3<Type> Vector3<Type>::operator+(const Vector3<Type> & _oth) const
@@ -69,7 +79,7 @@ inline Vector3<Type> Vector3<Type>::operator+(const Vector3<Type> & _oth) const
 template<class Type>
 inline Vector3<Type> Vector3<Type>::operator-(const Vector3<Type> & _oth) const
 {
-	return Vector3(_oth.x - x, _oth.y - y, _oth.z - z);
+	return Vector3(x - _oth.x, y - _oth.y, z -_oth.z);
 }
 
 
@@ -88,7 +98,7 @@ inline Vector3<Type> & Vector3<Type>::operator+=(const Vector3<Type> & _oth)
 template<class Type>
 inline Vector3<Type> & Vector3<Type>::operator-=(const Vector3<Type> & _oth)
 {
-	return *this = _oth - *this;
+	return *this = *this - _oth;
 }
 
 template<class Type>
@@ -101,6 +111,18 @@ template<class Type>
 inline Type Vector3<Type>::operator*(const Vector3 & _oth)
 {
 	return this->Dot(_oth);
+}
+
+template<class Type>
+inline Vector3<Type> Vector3<Type>::operator*(const Type & _oth) const
+{
+	return Vector3<Type>(x*_oth,y*_oth,z*_oth);
+}
+
+template<class Type>
+inline Vector3<Type>& Vector3<Type>::operator*=(const Type & _oth)
+{
+	return *this = *this * _oth;
 }
 
 template<class Type>
@@ -126,6 +148,12 @@ template<class Type>
 inline Vector3<Type> Vector3<Type>::Cross(const Vector3 & _oth) const
 {
 	return Vector3<Type>(y*_oth.z - z * _oth.y, z*_oth.x - x * _oth.z, x*_oth.y - y * _oth.x);
+}
+
+template<class Type>
+inline Vector3<Type> Vector3<Type>::LookAt(const Vector3 &_oth) const
+{
+	return Vector3<Type>(_oth-*this);
 }
 
 template<class Type>
