@@ -20,10 +20,12 @@ namespace My {
 		void TakePhoto(std::vector<Mesh> const& all_mesh) {
 
 			FILE *fp=fopen(R"(E:\test.png)","wb");
-			unsigned char *rgb = new unsigned char[m_hor_res * m_ver_res * 3];
+			unsigned char *rgb = new unsigned char[m_hor_res * m_ver_res * 4];
 			auto *p = rgb;
 
 			for (int i=0-m_hor_res/2;i< m_hor_res-m_hor_res/2; i++) {
+				system("cls");
+				cout << (i + m_hor_res / 2)*100.0f / m_hor_res << "%..." << endl;
 				for (int j=0-m_ver_res/2 ; j < m_ver_res -m_ver_res/2; j++) {
 					Ray ray{ m_poistion,(m_poistion + m_forward + m_horizontal * (i*2.0f / m_hor_res) + m_vertical * (j*2.0f / m_ver_res)) };
 					
@@ -43,12 +45,14 @@ namespace My {
 						*p++ = 200;
 						*p++ = 200;
 						*p++ = 200;
+						*p++ = 255;
 					}
 					else {
 						//cout << int( NearMesh->m_color.R )<< endl;
 						*p++ = NearMesh->m_color.R;
 						*p++ = NearMesh->m_color.G;
 						*p++ = NearMesh->m_color.B;
+						*p++ = NearMesh->m_color.A;
 					}
 
 					//if (!flag) std::cout << "  ";
@@ -57,7 +61,7 @@ namespace My {
 				}
 				//std::cout << std::endl;
 			}
-			svpng(fp,m_hor_res,m_ver_res,rgb,0);
+			svpng(fp,m_hor_res,m_ver_res,rgb,1);
 			delete[] rgb;
 			fclose(fp);
 		}

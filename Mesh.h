@@ -13,7 +13,7 @@ namespace My {
 		float RayCasting(Ray const&) const;
 
 		void SetColor(Color const& c) { m_color = c; }
-		Color m_color;
+		mutable Color m_color;
 	private:
 		vector3f m_point[3];
 		vector3f m_normal;
